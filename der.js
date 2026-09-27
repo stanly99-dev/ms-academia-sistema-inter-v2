@@ -143,7 +143,7 @@ function selecionarPerfilLogin(perfil, botao) {
   document.querySelectorAll('.chip-perfil').forEach(b => b.classList.remove('ativo'));
   botao.classList.add('ativo');
   const email = document.getElementById('campo-email');
-  if (perfil === 'aluno') email.value = 'Joaeryan124@gmail.com';
+  if (perfil === 'aluno') email.value = 'alunoteste@gmail.com';
   if (perfil === 'profissional') email.value = 'marcos.prof@msacademia.com';
   if (perfil === 'admin') email.value = 'admin@msacademia.com';
 }
@@ -153,7 +153,7 @@ function entrarNoSistema() {
   const app = document.getElementById('app');
   app.classList.add('ativo');
 
-  const nomes = { aluno: ['João Gariel', 'JG', 'Aluno'], profissional: ['Marcos Lima', 'ML', 'Profissional'], admin: ['Equipe MS', 'EQ', 'Administrador'] };
+  const nomes = { aluno: ['Alunoteste', 'AT', 'Aluno'], profissional: ['Marcos Lima', 'ML', 'Profissional'], admin: ['Equipe MS', 'EQ', 'Administrador'] };
   const [nome, iniciais, papel] = nomes[perfilSelecionado];
   document.getElementById('nome-usuario').textContent = nome;
   document.getElementById('avatar-usuario').textContent = iniciais;
