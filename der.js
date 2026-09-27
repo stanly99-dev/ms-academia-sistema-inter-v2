@@ -451,6 +451,46 @@ function renderizarConquistas() {
   `).join('');
 }
 
+// ---------- PERFIL ----------
+function renderizarPerfil(perfil, iniciais) {
+  const dados = USUARIOS[perfil];
+  if (!dados) return;
+
+  document.getElementById('perfil-nome').value = dados.nomeCompleto;
+  document.getElementById('perfil-contato').value = dados.contato;
+  document.getElementById('perfil-idade').value = dados.idade;
+  document.getElementById('perfil-cpf').value = dados.cpf;
+
+  const fotoPreview = document.getElementById('perfil-foto-preview');
+  fotoPreview.style.backgroundImage = '';
+  fotoPreview.textContent = iniciais;
+
+  const emDia = dados.statusFinanceiro === 'emdia';
+
+  const seloStatus = document.getElementById('perfil-status-financeiro');
+  seloStatus.textContent = emDia ? 'Em dia' : 'Inadimplente';
+  seloStatus.className = 'status-selo ' + (emDia ? 'aprovada' : 'inadimplente-selo');
+
+  document.getElementById('perfil-financeiro-obs').textContent = dados.obsFinanceiro;
+
+  const seloNav = document.getElementById('selo-financeiro-nav');
+  seloNav.className = 'selo-financeiro-nav ' + (emDia ? 'ok' : 'alerta');
+  seloNav.title = emDia ? 'Situação financeira: em dia' : 'Situação financeira: inadimplente';
+}
+
+function alterarFotoPerfil(evento) {
+  const arquivo = evento.target.files[0];
+  if (!arquivo) return;
+
+  const leitor = new FileReader();
+  leitor.onload = () => {
+    const preview = document.getElementById('perfil-foto-preview');
+    preview.style.backgroundImage = `url(${leitor.result})`;
+    preview.textContent = '';
+  };
+  leitor.readAsDataURL(arquivo);
+}
+
 // ---------- FILTROS: categorias disponíveis ----------
 function categoriasUnicas(lista) {
   return [...new Set(lista.map(i => i.categoria))];

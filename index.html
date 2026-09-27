@@ -60,6 +60,7 @@
       <li><button data-pagina="evolucao" onclick="irPara('evolucao')"><span class="icone">📈</span><span class="rotulo">Evolução</span></button></li>
       <li><button data-pagina="avaliacao" onclick="irPara('avaliacao')"><span class="icone">📋</span><span class="rotulo">Avaliação</span></button></li>
       <li><button data-pagina="conquistas" onclick="irPara('conquistas')"><span class="icone">🏆</span><span class="rotulo">Conquistas</span></button></li>
+       <li><button data-pagina="perfil" onclick="irPara('perfil')"><span class="icone">👤</span><span class="rotulo">perfil</span></button></li>
     </ul>
     <div class="lateral-rodape">
       <div class="usuario-card">
@@ -250,19 +251,61 @@
     </section>
 
     <!-- ===== CONQUISTAS ===== -->
-    <section class="pagina" id="pagina-conquistas">
-      <div class="cabecalho-pagina">
-        <div>
-          <h1>Conquistas</h1>
-          <span class="legenda">Sua constância registrada</span>
+      <section class="pagina" id="pagina-conquistas">
+        <div class="cabecalho-pagina">
+          <div>
+            <h1>Conquistas</h1>
+            <span class="legenda">Sua constância registrada</span>
+          </div>
         </div>
-      </div>
-      <div class="grid-conquistas" id="grid-conquistas"></div>
-    </section>
+        <div class="grid-conquistas" id="grid-conquistas"></div>
+      </section>
 
-  </main>
-</div>
+      <!-- ===== PERFIL ===== -->
+      <section class="pagina" id="pagina-perfil">
+        <div class="cabecalho-pagina">
+          <div>
+            <h1>Meu perfil</h1>
+            <span class="legenda">Seus dados pessoais e situação financeira na academia</span>
+          </div>
+        </div>
 
+        <div class="cartao-perfil">
+          <div class="perfil-foto-area">
+            <div class="perfil-foto" id="perfil-foto-preview">JG</div>
+            <input type="file" id="perfil-foto-input" accept="image/*" class="oculto" onchange="alterarFotoPerfil(event)">
+            <button type="button" class="btn btn-secundario" onclick="document.getElementById('perfil-foto-input').click()">Alterar foto</button>
+          </div>
+
+          <div class="perfil-dados">
+            <div class="campo">
+              <label for="perfil-nome">Nome completo</label>
+              <input type="text" id="perfil-nome" readonly>
+            </div>
+            <div class="campo">
+              <label for="perfil-contato">Contato</label>
+              <input type="text" id="perfil-contato" readonly>
+            </div>
+            <div class="campo">
+              <label for="perfil-idade">Idade</label>
+              <input type="text" id="perfil-idade" readonly>
+            </div>
+            <div class="campo">
+              <label for="perfil-cpf">CPF</label>
+              <input type="text" id="perfil-cpf" readonly>
+            </div>
+          </div>
+        </div>
+
+        <div class="secao-titulo"><h3>Situação financeira</h3></div>
+        <div class="cartao-financeiro">
+          <span class="status-selo" id="perfil-status-financeiro">Em dia</span>
+          <p id="perfil-financeiro-obs">Nenhuma pendência encontrada.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
 <!-- ============ MODAL DE DETALHE (exercício/máquina) ============ -->
 <div class="sobreposicao" id="sobreposicao" onclick="fecharModalSeFora(event)">
   <div class="modal">

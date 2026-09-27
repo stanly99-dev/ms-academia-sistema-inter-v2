@@ -759,6 +759,55 @@ input, select, textarea{ font-family: var(--corpo); }
 .conquista strong{ display:block; font-size:0.85rem; }
 .conquista small{ font-size:0.72rem; color:#6B6259; }
 
+/* ============ PERFIL ============ */
+.cartao-perfil{
+border: 2px solid var(--preto);
+background:#fff;
+padding: 2rem;
+display:grid;
+grid-template-columns: 180px 1fr;
+gap: 2rem;
+margin-bottom: 2rem;
+}
+.perfil-foto-area{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:0.9rem;
+}
+.perfil-foto{
+width: 140px; height:140px;
+background: var(--preto);
+color: var(--osso);
+font-family: var(--display);
+font-size: 2.6rem;
+display:flex; align-items:center; justify-content:center;
+border: 2px solid var(--preto);
+background-size:cover;
+background-position:center;
+}
+.perfil-dados{
+display:grid;
+grid-template-columns: 1fr 1fr;
+gap: 0 1.2rem;
+align-content:start;
+}
+.perfil-dados .campo{ margin-bottom:1.1rem; }
+.perfil-dados .campo input[readonly]{
+background: var(--osso-2);
+color:#4A433C;
+cursor:default;
+}
+
+.cartao-financeiro{
+border: 2px solid var(--preto);
+background:#33ce3d;
+padding: 1.4rem 4.8rem;
+max-width: 560px;
+}
+.cartao-financeiro p{ margin-top:0.7rem; font-size:0.88rem; color:#6B6259; line-height:1.5; }
+.status-selo.inadimplente-selo{ background:#cf283c; color:#B23A0E; }
+
 /* ============ RESPONSIVO ============ */
 @media (max-width: 900px){
   #app.ativo{ grid-template-columns: 1fr; }
