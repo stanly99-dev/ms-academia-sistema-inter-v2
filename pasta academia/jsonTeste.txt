@@ -1,0 +1,80 @@
+!ATEÇÃO O CODIGO ABAIXO NÃO ESTA OFICIALMENTE NO JAVASCRIPT DO SITE, SE CONVENIENTE COM O RESTO DO PROJETO, USEO
+
+
+
+const express = require('express');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+const db = require('./db');
+
+const app = express();
+
+// Middlewares obrigatórios para ler JSON e aceitar chamadas do navegador
+app.use(cors());
+app.use(express.json());
+
+// --- ROTA DE CADASTRO DE USUÁRIO ---
+app.post('/api/cadastrar', async (req, res) => {
+  const { nome, email, senha, tipo_usuario_id } = req.body;
+
+  try {
+    // Criptografa a senha
+    const senhaHash = await bcrypt.hash(senha, 10);
+
+    // Insere no banco MySQL
+    const [result] = await db.query(
+      'INSERT INTO usuarios (nome, email, senha_hash, tipo_usuario_id) VALUES (?, ?, ?, ?)',
+      [nome, email, senhaHash, tipo_usuario_id || 1]
+    );
+
+    res.status(201).json({
+      sucesso: true,
+      mensagem: 'Usuário cadastrado com sucesso!',
+      id: result.insertId
+    });
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: 'Erro ao cadastrar usuário' });
+  }
+});
+
+// --- ROTA DE LOGIN ---
+app.post('/api/login', async (req, res) => {
+  const { email, senha } = req.body;
+
+  try {
+    // Busca o usuário pelo e-mail
+    const [rows] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+
+    if (rows.length === 0) {
+      return res.status(401).json({ erro: 'E-mail ou senha incorretos' });
+    }
+
+    const usuario = rows[0];
+
+    // Compara a senha informada com o hash salvo no banco
+    const senhaValida = await bcrypt.compare(senha, usuario.senha_hash);
+
+    if (!senhaValida) {
+      return res.status(401).json({ erro: 'E-mail ou senha incorretos' });
+    }
+
+    // Remove o hash da senha da resposta por segurança
+    delete usuario.senha_hash;
+
+    res.json({
+      sucesso: true,
+      mensagem: 'Login efetuado com sucesso!',
+      usuario
+    });
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: 'Erro ao realizar login' });
+  }
+});
+
+// Inicialização do servidor na porta 3000
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
+});

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS Academia — Sistema de Treinos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ TELA DE LOGIN ============ -->
+<div id="tela-login" class="tela">
+  <div class="login-marca">
+    <span class="tag">Qualidade • treino orientado</span>
+    <h1>MS<br><span>ACADEMIA</span></h1>
+    <p class="desc">Acompanhamento de treino personalizado, catálogo de máquinas e orientação passo a passo — tudo em um só lugar, do primeiro treino até a evolução.</p>
+    <div class="selo">
+      <div><strong>3</strong><small>Perfis de acesso</small></div>
+      <div><strong>100%</strong><small>Aprovado por profissional</small></div>
+      <div><strong>Praticidade</strong><small>saúde em dia</small></div>
+    </div>
+  </div>
+  <div class="login-caixa">
+    <div class="painel-login">
+      <h2>Entrar</h2>
+      <span class="sub">Acesse com seu e-mail cadastrado na MS Academia</span>
+
+      <div class="campo">
+        <label for="campo-email">E-mail</label>
+        <input type="email" id="campo-email" placeholder="voce@email.com" value="alunoteste@gmail.com">
+      </div>
+      <div class="campo">
+        <label for="campo-senha">Senha</label>
+        <input type="password" id="campo-senha" placeholder="123456" value="123456">
+      </div>
+
+      <button class="btn btn-bloco" id="btn-entrar" onclick="entrarNoSistema()">Entrar</button>
+      <div id="login-feedback" style="display:none; margin-top:0.75rem; font-size:0.85rem; padding:0.6rem; border-radius:6px; text-align:center;"></div>
+      <div style="text-align:center; margin-top:0.6rem;">
+        <button class="btn-fantasma">Esqueci minha senha</button>
+      </div>
+
+      <div style="text-align:center; margin-top:0.4rem;">
+        <button type="button" class="btn-fantasma" onclick="alternarTelaLoginCadastro(true)">Não tem uma conta? <strong>Cadastre-se aqui</strong></button>
+      </div>
+
+      <div class="perfis-rapidos" role="group" aria-label="Selecionar perfil de demonstração">
+        <button type="button" class="chip-perfil ativo" data-perfil="aluno" onclick="selecionarPerfilLogin('aluno', this)">Sou aluno</button>
+        <button type="button" class="chip-perfil" data-perfil="profissional" onclick="selecionarPerfilLogin('profissional', this)">Sou profissional</button>
+        <button type="button" class="chip-perfil" data-perfil="admin" onclick="selecionarPerfilLogin('admin', this)">Administrador</button>
+      </div>
+    </div>
+
+    <!-- PAINEL DE CADASTRO (NOVA CONTA COM BCRYPT) -->
+    <div class="painel-login" id="painel-cadastro" style="display:none;">
+      <h2>Criar Conta</h2>
+      <span class="sub">Cadastre-se na MS Academia para acompanhar seus treinos</span>
+
+      <div class="campo">
+        <label for="cad-nome">Nome completo</label>
+        <input type="text" id="cad-nome" placeholder="Seu nome completo">
+      </div>
+      <div class="campo">
+        <label for="cad-email">E-mail</label>
+        <input type="email" id="cad-email" placeholder="voce@email.com">
+      </div>
+      <div class="campo">
+        <label for="cad-senha">Senha</label>
+        <input type="password" id="cad-senha" placeholder="Crie sua senha segura">
+      </div>
+
+      <button class="btn btn-bloco" id="btn-cadastrar" onclick="cadastrarNovaConta()">Cadastrar Conta</button>
+      <div id="cadastro-feedback" style="display:none; margin-top:0.75rem; font-size:0.85rem; padding:0.6rem; border-radius:6px; text-align:center;"></div>
+      
+      <div style="text-align:center; margin-top:0.8rem;">
+        <button type="button" class="btn-fantasma" onclick="alternarTelaLoginCadastro(false)">Já tem uma conta? <strong>Fazer Login</strong></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP (após login) ============ -->
+<div id="app">
+  <!-- LATERAL / NAVEGAÇÃO -->
+  <nav class="lateral">
+    <div class="marca-mini"><span class="m1">MS</span><span class="m2">ACADEMIA</span></div>
+    <ul class="nav-lista" id="nav-lista">
+      <li><button data-pagina="dashboard" class="ativo" onclick="irPara('dashboard')"><span class="icone">🏠</span><span class="rotulo">Meu treino</span></button></li>
+      <li><button data-pagina="exercicios" onclick="irPara('exercicios')"><span class="icone">🏋️</span><span class="rotulo">Exercícios</span></button></li>
+      <li><button data-pagina="maquinas" onclick="irPara('maquinas')"><span class="icone">⚙️</span><span class="rotulo">Máquinas</span></button></li>
+      <li><button data-pagina="evolucao" onclick="irPara('evolucao')"><span class="icone">📈</span><span class="rotulo">Evolução</span></button></li>
+      <li><button data-pagina="avaliacao" onclick="irPara('avaliacao')"><span class="icone">📋</span><span class="rotulo">Avaliação</span></button></li>
+      <li><button data-pagina="conquistas" onclick="irPara('conquistas')"><span class="icone">🏆</span><span class="rotulo">Conquistas</span></button></li>
+       <li><button data-pagina="perfil" onclick="irPara('perfil')"><span class="icone">👤</span><span class="rotulo">perfil</span></button></li>
+    </ul>
+    <div class="lateral-rodape">
+      <div class="usuario-card">
+        <div class="avatar" id="avatar-usuario">AT</div>
+        <div>
+          <div class="nome" id="nome-usuario">Alunoteste</div>
+          <div class="papel" id="papel-usuario">Aluno</div>
+        </div>
+      </div>
+      <button class="sair-btn" onclick="sairDoSistema()">Sair</button>
+    </div>
+  </nav>
+
+  <!-- CONTEÚDO -->
+  <main class="conteudo">
+
+    <!-- ===== DASHBOARD ===== -->
+    <section class="pagina ativa" id="pagina-dashboard">
+      <span class="saudacao" id="texto-saudacao">Boa tarde, alunoteste 👋</span>
+      <div class="cabecalho-pagina">
+        <div>
+          <h1>Seu treino de hoje</h1>
+          <span class="legenda">Terça-feira — Treino B: Membros inferiores</span>
+        </div>
+        <button class="btn" onclick="irPara('treino-ativo')">Iniciar treino →</button>
+      </div>
+
+      <div class="placar">
+        <div class="placar-item"><strong class="laranja" id="placar-treinos-mes">12</strong><small>Treinos este mês</small></div>
+        <div class="placar-item"><strong id="placar-dias-seguidos">4</strong><small>Dias seguidos</small></div>
+        <div class="placar-item"><strong id="placar-frequencia">82%</strong><small>Frequência</small></div>
+        <div class="placar-item"><strong id="placar-recorde">+8kg</strong><small>Carga no leg press</small></div>
+      </div>
+
+      <!-- HERO DE TREINO ATIVO -->
+      <div class="hero-treino" id="card-hero-treino">
+        <span class="rotulo">Plano ativo</span>
+        <h2 id="hero-plano-nome">Hipertrofia — Fase 2</h2>
+        <div class="meta">
+          <div><strong id="hero-total-exercicios">5</strong><small>Exercícios hoje</small></div>
+          <div><strong id="hero-duracao-estimada">~50min</strong><small>Duração estimada</small></div>
+          <div><strong id="hero-responsavel">Prof. Mauro</strong><small>Responsável técnico</small></div>
+        </div>
+        <button class="btn" onclick="irPara('treino-ativo')">Ver exercícios do dia</button>
+      </div>
+
+      <!-- HERO DE ZERO STATE (NOVO USUÁRIO SEM TREINO PRESCRITO) -->
+      <div class="hero-treino" id="card-hero-zerostate" style="display:none; border-left: 4px solid #E65100;">
+        <span class="rotulo">Novo Aluno • Estado Inicial</span>
+        <h2 id="zerostate-titulo">Boas-vindas à MS Academia!</h2>
+        <p style="margin: 0.8rem 0 1.2rem 0; font-size: 0.95rem; color: #555; line-height: 1.5;">
+          Seu painel está zerado no momento. Complete sua avaliação física inicial para que o instrutor responsável monte seu plano de treino personalizado!
+        </p>
+        <div class="meta" style="margin-bottom: 1.2rem;">
+          <div><strong id="zerostate-status">Pendente</strong><small>Avaliação Física</small></div>
+          <div><strong>0</strong><small>Exercícios prescritos</small></div>
+          <div><strong>Aguardando</strong><small>Instrutor Responsável</small></div>
+        </div>
+        <button class="btn" onclick="irPara('avaliacao')">📋 Preencher minha avaliação inicial →</button>
+      </div>
+
+      <div class="secao-titulo">
+        <h3>Progresso de hoje</h3>
+        <button class="link" onclick="irPara('evolucao')">Ver evolução completa</button>
+      </div>
+      <div class="lista-treino-hoje" id="lista-treino-hoje"><!-- preenchido via JS --></div>
+    </section>
+
+    <!-- ===== EXERCÍCIOS ===== -->
+    <section class="pagina" id="pagina-exercicios">
+      <div class="cabecalho-pagina">
+        <div>
+          <h1>Catálogo de exercícios</h1>
+          <span class="legenda">Como executar, erros comuns e observações do profissional</span>
+        </div>
+      </div>
+      <div class="filtros-catalogo" id="filtros-exercicios"></div>
+      <div class="grid-catalogo" id="grid-exercicios"></div>
+    </section>
+
+    <!-- ===== MÁQUINAS ===== -->
+    <section class="pagina" id="pagina-maquinas">
+      <div class="cabecalho-pagina">
+        <div>
+          <h1>Catálogo de máquinas</h1>
+          <span class="legenda">Finalidade, como utilizar e cuidados de cada equipamento</span>
+        </div>
+      </div>
+      <div class="filtros-catalogo" id="filtros-maquinas"></div>
+      <div class="grid-catalogo" id="grid-maquinas"></div>
+    </section>
+
+    <!-- ===== TREINO ATIVO ===== -->
+    <section class="pagina" id="pagina-treino-ativo">
+      <div class="cabecalho-pagina">
+        <div>
+          <h1 id="titulo-exercicio-ativo">Agachamento no smith</h1>
+          <span class="legenda" id="progresso-treino-ativo">Exercício 1 de 5</span>
+        </div>
+      </div>
+
+      <div class="painel-treino-ativo">
+        <div class="exercicio-ativo">
+          <div class="exercicio-ativo-info">
+            <span class="cat" id="ea-categoria">Membros inferiores</span>
+            <h2 id="ea-nome">Agachamento no smith</h2>
+            <div class="video-mock">
+  <iframe width="100%" height="315" src="" title="Vídeo demonstrativo" frameborder="0" allowfullscreen></iframe>
+</div>
+            <div class="bloco-modal">
+              <h5>Como executar</h5>
+              <p id="ea-como">Posicione os pés na largura dos ombros, desça controlando o movimento até 90°, mantenha a coluna neutra.</p>
+            </div>
+            <div class="bloco-modal">
+              <h5>Observação do profissional</h5>
+              <p id="ea-obs">Manter joelhos alinhados com a ponta dos pés. Aumentar carga gradualmente.</p>
+            </div>
+          </div>
+          <div class="exercicio-ativo-registro">
+            <h4>Registrar série</h4>
+            <div id="lista-series"></div>
+
+            <div class="cronometro-caixa">
+              <div class="rotulo-min">Descanso entre séries</div>
+              <div class="tempo" id="tempo-cron">00:60</div>
+              <div class="cron-botoes">
+                <button onclick="iniciarCronometro()">Iniciar</button>
+                <button onclick="pararCronometro()">Pausar</button>
+                <button class="principal" onclick="resetarCronometro()">Reiniciar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="navegacao-treino">
+          <button class="btn btn-secundario" onclick="exercicioAnterior()">← Anterior</button>
+          <button class="btn" onclick="proximoExercicio()">Próximo exercício →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== EVOLUÇÃO ===== -->
+    <section class="pagina" id="pagina-evolucao">
+      <div class="cabecalho-pagina">
+        <div>
+          <h1>Sua evolução</h1>
+          <span class="legenda">Histórico de cargas, frequência e progresso</span>
+        </div>
+      </div>
+
+      <div class="grid-evolucao">
+        <div class="cartao-grafico">
+          <h4>Carga no leg press (kg) — últimas 6 semanas</h4>
+          <div class="barra-grupo" id="grafico-carga"></div>
+        </div>
+        <div class="cartao-grafico">
+          <h4>Treinos realizados por semana</h4>
+          <div class="barra-grupo" id="grafico-frequencia"></div>
+        </div>
+      </div>
+
+      <div class="secao-titulo"><h3>Histórico de treinos</h3></div>
+      <table class="tabela-historico">
+        <thead>
+          <tr><th>Data</th><th>Treino</th><th>Exercícios</th><th>Duração</th><th>Status</th></tr>
+        </thead>
+        <tbody id="corpo-historico"></tbody>
+      </table>
+    </section>
+
+    <!-- ===== AVALIAÇÃO / QUESTIONÁRIO ===== -->
+    <section class="pagina" id="pagina-avaliacao">
+      <div class="cabecalho-pagina">
+        <div>
+          <h1>Avaliação inicial</h1>
+          <span class="legenda">Suas respostas serão analisadas por um profissional habilitado antes da liberação do treino</span>
+        </div>
+      </div>
+
+      <form class="form-avaliacao" id="form-avaliacao" onsubmit="return enviarAvaliacao(event)">
+        <div class="campo">
+          <label>Qual seu principal objetivo?</label>
+          <div class="opcoes-radio">
+            <label><input type="radio" name="objetivo" value="Hipertrofia" checked><span>Hipertrofia</span></label>
+            <label><input type="radio" name="objetivo" value="Emagrecimento"><span>Emagrecimento</span></label>
+            <label><input type="radio" name="objetivo" value="Condicionamento"><span>Condicionamento</span></label>
+            <label><input type="radio" name="objetivo" value="Mobilidade"><span>Mobilidade</span></label>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Nível de experiência</label>
+          <div class="opcoes-radio">
+            <label><input type="radio" name="nivel" value="Iniciante" checked><span>Iniciante</span></label>
+            <label><input type="radio" name="nivel" value="Intermediário"><span>Intermediário</span></label>
+            <label><input type="radio" name="nivel" value="Avançado"><span>Avançado</span></label>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="limitacoes">Possui alguma limitação, lesão ou condição relevante?</label>
+          <textarea id="limitacoes" rows="3" style="width:100%; padding:0.75rem; border:2px solid var(--carvao-linha); font-size:0.9rem;" placeholder="Descreva aqui, ou deixe em branco se não houver"></textarea>
+        </div>
+        <button type="submit" class="btn btn-bloco">Enviar para avaliação do profissional</button>
+        <div id="status-avaliacao-area"></div>
+      </form>
+    </section>
+
+    <!-- ===== CONQUISTAS ===== -->
+      <section class="pagina" id="pagina-conquistas">
+        <div class="cabecalho-pagina">
+          <div>
+            <h1>Conquistas</h1>
+            <span class="legenda">Sua constância registrada</span>
+          </div>
+        </div>
+        <div class="grid-conquistas" id="grid-conquistas"></div>
+      </section>
+
+      <!-- ===== PERFIL ===== -->
+      <section class="pagina" id="pagina-perfil">
+        <div class="cabecalho-pagina">
+          <div>
+            <h1>Meu perfil</h1>
+            <span class="legenda">Seus dados pessoais e situação financeira na academia</span>
+          </div>
+        </div>
+
+        <div class="cartao-perfil">
+          <div class="perfil-foto-area">
+            <div class="perfil-foto" id="perfil-foto-preview">JG</div>
+            <input type="file" id="perfil-foto-input" accept="image/*" class="oculto" onchange="alterarFotoPerfil(event)">
+            <button type="button" class="btn btn-secundario" onclick="document.getElementById('perfil-foto-input').click()">Alterar foto</button>
+          </div>
+
+          <div class="perfil-dados">
+            <div class="campo">
+              <label for="perfil-nome">Nome completo</label>
+              <input type="text" id="perfil-nome" readonly>
+            </div>
+            <div class="campo">
+              <label for="perfil-contato">Contato</label>
+              <input type="text" id="perfil-contato" readonly>
+            </div>
+            <div class="campo">
+              <label for="perfil-idade">Idade</label>
+              <input type="text" id="perfil-idade" readonly>
+            </div>
+            <div class="campo">
+              <label for="perfil-cpf">CPF</label>
+              <input type="text" id="perfil-cpf" readonly>
+            </div>
+          </div>
+        </div>
+
+        <div class="secao-titulo"><h3>Situação financeira</h3></div>
+        <div class="cartao-financeiro">
+          <span class="status-selo" id="perfil-status-financeiro">Em dia</span>
+          <p id="perfil-financeiro-obs">Nenhuma pendência encontrada.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+<!-- ============ MODAL DE DETALHE (exercício/máquina) ============ -->
+<div class="sobreposicao" id="sobreposicao" onclick="fecharModalSeFora(event)">
+  <div class="modal">
+    <div class="modal-topo">
+      <button class="fechar" onclick="fecharModal()" aria-label="Fechar">×</button>
+      <span class="cat" id="modal-cat">Categoria</span>
+      <h3 id="modal-titulo">Nome do item</h3>
+    </div>
+    <div class="modal-corpo" id="modal-corpo"><!-- preenchido via JS --></div>
+  </div>
+</div>
+<!-- Lembrar que o funiciona é apenas o primeiro bloco, para colocar o vídeo, o restante esta em JS, GRAVAR MP4 no dia que for para a academia 
+-->
+<script src="der.js"></script>
+</body>
+</html>

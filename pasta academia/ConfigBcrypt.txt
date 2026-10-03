@@ -1,0 +1,119 @@
+aqui vai ficar a configuracao do bcrypt, ele deve ser usado para aumentar a seguranca do sistema e obedecer o RNF03
+
+const bcrypt = require('bcrypt'); // Adicione no topo do arquivo
+
+// Rota de CADASTRO
+app.post('/api/cadastro', async (req, res) => {
+    const { nome, email, senha } = req.body;
+
+    try {
+        // Criptografa a senha (o '10' é o custo do processamento do hash)
+        const senhaHash = await bcrypt.hash(senha, 10);
+
+        // Insere no banco. Assumindo que perfil_id 1 seja o 'Aluno' padrão
+        const sql = 'INSERT INTO usuarios (nome, email, senha, perfil_id) VALUES (?, ?, ?, 1)';
+
+        pool.query(sql, [nome, email, senhaHash], (err, result) => {
+            if (err) {
+                return res.status(500).json({ erro: 'Erro ao criar usuário ou email já existe.' });
+            }
+            res.json({ mensagem: 'Conta criada com sucesso!' });
+        });
+    } catch (erro) {
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// Rota de LOGIN
+app.post('/api/login', (req, res) => {
+    const { email, senha } = req.body;
+
+    const sql = 'SELECT * FROM usuarios WHERE email = ?';
+    pool.query(sql, [email], async (err, results) => {
+        if (err) return res.status(500).json({ erro: 'Erro no banco de dados' });
+
+        // Verifica se o email existe
+        if (results.length === 0) {
+            return res.status(401).json({ erro: 'Usuário não encontrado' });
+        }
+
+        const usuario = results[0];
+
+        // Compara a senha digitada com o hash salvo no banco
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+        if (!senhaValida) {
+            return res.status(401).json({ erro: 'Senha incorreta' });
+        }
+
+        // Devolve os dados do usuário (NUNCA devolva a senha)
+        res.json({
+            id: usuario.id,
+            nome: usuario.nome,
+            perfil_id: usuario.perfil_id
+        });
+    });
+});
+
+aqui vai ficar a configuracao usada no frontend (javaScript) adicionando o conceito de ZeroState no sistema, isso tambem usara o LocalStorage do usuario
+
+// 1. Função de Login simulada (você conectará isso ao botão de 'Entrar' no seu HTML)
+async function fazerLogin(emailDigitado, senhaDigitada) {
+    const resposta = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailDigitado, senha: senhaDigitada })
+    });
+
+    if (resposta.ok) {
+        const dadosUsuario = await resposta.json();
+        // Salva o usuário no navegador para ele não deslogar ao dar F5
+        localStorage.setItem('usuarioLogado', JSON.stringify(dadosUsuario));
+        carregarPainel(); // Monta a tela
+    } else {
+        alert("Email ou senha incorretos.");
+    }
+}
+
+// 2. Lógica do Estado Zerado (Zero State)
+async function carregarPainel() {
+    const usuarioString = localStorage.getItem('usuarioLogado');
+
+    // Se não tiver ninguém logado, mostra o form de login e esconde o painel
+    if (!usuarioString) {
+        document.getElementById('area-login').style.display = 'block';
+        document.getElementById('area-painel').style.display = 'none';
+        return;
+    }
+
+    const usuario = JSON.parse(usuarioString);
+    document.getElementById('area-login').style.display = 'none';
+    document.getElementById('area-painel').style.display = 'block';
+
+    // Aqui você faria um fetch buscando os dados APENAS desse usuário
+    // Ex: fetch(`http://localhost:3000/api/treinos?usuario_id=${usuario.id}`)
+    const dadosDoBanco = []; // Simulando que o banco retornou vazio para esse usuário novo
+
+    const conteudoPainel = document.getElementById('conteudo-painel');
+
+    // A MÁGICA DO ZERO STATE ACONTECE AQUI
+    if (dadosDoBanco.length === 0) {
+        conteudoPainel.innerHTML = `
+            <div class="zero-state" style="text-align: center; padding: 50px;">
+                <h2>Olá, ${usuario.nome}! Boas-vindas à MS Academia.</h2>
+                <p>O seu painel está vazio no momento.</p>
+                <img src="caminho_para_um_icone_legal.png" alt="Sem dados" style="width: 150px; opacity: 0.5;">
+                <br><br>
+                <button onclick="solicitarTreino()">Solicitar meu primeiro treino</button>
+            </div>
+        `;
+    } else {
+        // Se tivesse dados (length > 0), você faria um loop para renderizar as tabelas/cards reais
+        conteudoPainel.innerHTML = `<p>Renderizando os treinos do usuário...</p>`;
+    }
+}
+
+// Executa ao carregar a página
+carregarPainel();
+
+
